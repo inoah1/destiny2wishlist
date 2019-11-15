@@ -32,3 +32,4 @@ build/
 
 # Project exclude paths
 /node_modules/
+/src/main/resources/application-local.properties
