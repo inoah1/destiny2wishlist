@@ -1,12 +1,13 @@
 package com.destiny2wishlist.backend.entities;
 
+import com.destiny2wishlist.backend.api.dto.enums.DestinyItemTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -16,11 +17,18 @@ import javax.persistence.Table;
 @AllArgsConstructor
 public class DestinyWeapon extends AbstractEntity {
 
-    private long hash;
-
     private String name;
 
     private String description;
 
     private String icon;
+
+    private int itemType;
+
+    private int itemSubType;
+
+    @ElementCollection(targetClass = DestinyItemTypeEnum.class)
+    @CollectionTable(name = "weapon_item_categories")
+    @Column(name = "itemCategory")
+    private Collection<DestinyItemTypeEnum> itemCategory;
 }

@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,8 +17,9 @@ import java.time.LocalDate;
 @Table(name="destiny_manifest")
 @NoArgsConstructor
 @AllArgsConstructor
-public class DestinyManifest extends AbstractEntity {
+public class DestinyManifest {
 
+    @Id
     @Column(unique = true, nullable = false)
     private String version;
 
@@ -30,6 +31,12 @@ public class DestinyManifest extends AbstractEntity {
 
     @Column(unique = true, nullable = false)
     private boolean isLatest;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public DestinyManifest(String version, String json) {
         this.version = version;

@@ -1,5 +1,7 @@
 package com.destiny2wishlist.ui;
 
+import com.destiny2wishlist.backend.api.exception.ApiClientException;
+import com.destiny2wishlist.backend.services.LoadManifestService;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
@@ -9,6 +11,7 @@ import com.vaadin.flow.server.ErrorHandler;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route
 @PWA(name = "Destiny 2 Wishlist Generator", shortName = "D2 Wishlist")
@@ -16,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MainView extends VerticalLayout {
 
-
+    @Autowired
+    LoadManifestService manifestService;
 
     public MainView() {
         VaadinSession.getCurrent()
@@ -29,7 +33,18 @@ public class MainView extends VerticalLayout {
 
         setSizeFull();
 
+        loadDestinyManifest();
         initSearchBar();
+
+    }
+
+    private void loadDestinyManifest() {
+
+        try {
+            manifestService.loadDestinyManifest();
+        } catch (ApiClientException e) {
+            log.error("Error getting Destiny manifest", e);
+        }
 
     }
 

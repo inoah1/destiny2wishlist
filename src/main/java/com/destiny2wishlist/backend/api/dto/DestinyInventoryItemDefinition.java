@@ -18,9 +18,6 @@ public class DestinyInventoryItemDefinition {
     @JsonProperty("displayProperties")
     private DestinyDisplayPropertiesDefinition displayProperties;
 
-    @JsonProperty("inventory")
-    private DestinyItemInventoryBlockDefinition inventory;
-
     @JsonProperty("itemCategoryHashes")
     private long[] itemCategoryHashes;
 
