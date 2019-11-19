@@ -29,9 +29,6 @@ public class DestinyManifest {
     @Column(name = "last_refresh_date")
     private LocalDate lastRefreshDate;
 
-    @Column(unique = true, nullable = false)
-    private boolean isLatest;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 

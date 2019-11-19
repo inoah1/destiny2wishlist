@@ -48,6 +48,7 @@ public class DestinyApiClient {
             String data = request.getUrl(url);
 
             DestinyManifestJson response = mapper.readValue(data, DestinyManifestJson.class);
+            response.setJsonData(data);
 
             return response;
         } catch (Exception e) {

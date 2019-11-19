@@ -21,4 +21,13 @@ public enum DestinyItemCategoryEnum {
     DestinyItemCategoryEnum(long hash) {
         this.hash = hash;
     }
+
+    public static DestinyItemCategoryEnum fromLong(long hash) {
+        for (DestinyItemCategoryEnum itemCategoryEnum : DestinyItemCategoryEnum.values()) {
+            if (itemCategoryEnum.hash == hash) {
+                return itemCategoryEnum;
+            }
+        }
+        return null;
+    }
 }

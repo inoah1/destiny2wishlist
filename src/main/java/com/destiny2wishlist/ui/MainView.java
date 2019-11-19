@@ -11,7 +11,6 @@ import com.vaadin.flow.server.ErrorHandler;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Route
 @PWA(name = "Destiny 2 Wishlist Generator", shortName = "D2 Wishlist")
@@ -19,10 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class MainView extends VerticalLayout {
 
-    @Autowired
-    LoadManifestService manifestService;
+    private final LoadManifestService manifestService;
 
-    public MainView() {
+    public MainView(LoadManifestService manifestService) {
         VaadinSession.getCurrent()
                 .setErrorHandler((ErrorHandler) errorEvent -> {
                     log.error("Uncaught UI exception",
@@ -30,6 +28,8 @@ public class MainView extends VerticalLayout {
                     Notification.show(
                             "We are sorry, but an internal error occurred");
                 });
+
+        this.manifestService = manifestService;
 
         setSizeFull();
 
