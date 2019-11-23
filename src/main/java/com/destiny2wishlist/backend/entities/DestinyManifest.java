@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,8 +25,8 @@ public class DestinyManifest {
     @Lob
     private String json;
 
-    @Column(name = "last_refresh_date")
-    private LocalDate lastRefreshDate;
+    @Column(unique = true)
+    private boolean isLatest;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -35,9 +34,10 @@ public class DestinyManifest {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+
     public DestinyManifest(String version, String json) {
         this.version = version;
         this.json = json;
-        this.lastRefreshDate = LocalDate.now();
+        isLatest = true;
     }
 }
