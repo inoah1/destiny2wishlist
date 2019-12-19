@@ -33,7 +33,7 @@ public class DestinyApiClient {
             String data = request.getUrl(url);
 
             DestinyManifestResponse response = mapper.readValue(data, DestinyManifestResponse.class);
-            if(response.getErrorCode() != 1){
+            if (response.getErrorCode() != 1) {
                 throw new ApiClientException(response.getMessage(), response.getErrorStatus(), response.getErrorCode());
             }
             return response;

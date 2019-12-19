@@ -8,7 +8,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name="destiny_weapon")
+@Table(name = "destiny_weapon")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

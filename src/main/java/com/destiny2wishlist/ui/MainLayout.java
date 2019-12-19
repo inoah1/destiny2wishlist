@@ -1,6 +1,7 @@
 package com.destiny2wishlist.ui;
 
 import com.destiny2wishlist.ui.about.AboutView;
+import com.destiny2wishlist.ui.wishlist.WishlistView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -45,6 +46,8 @@ public class MainLayout extends AppLayout implements RouterLayout {
         addToNavbar(top);
 
         // Navigation items
+        addToDrawer(createMenuLink(WishlistView.class, WishlistView.VIEW_NAME, VaadinIcon.LIST.create()));
+
         addToDrawer(createMenuLink(AboutView.class, AboutView.VIEW_NAME, VaadinIcon.INFO_CIRCLE.create()));
 
     }

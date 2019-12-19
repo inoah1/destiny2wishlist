@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name="destiny_manifest")
+@Table(name = "destiny_manifest")
 @NoArgsConstructor
 @AllArgsConstructor
 public class DestinyManifest {

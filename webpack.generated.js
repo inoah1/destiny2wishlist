@@ -37,33 +37,33 @@ let stats;
 
 const watchDogPrefix = '--watchDogPort=';
 let watchDogPort = process.argv.find(v => v.indexOf(watchDogPrefix) >= 0);
-if (watchDogPort){
-    watchDogPort = watchDogPort.substr(watchDogPrefix.length);
+if (watchDogPort) {
+  watchDogPort = watchDogPort.substr(watchDogPrefix.length);
 }
 
 const net = require('net');
 
-function setupWatchDog(){
-    var client = new net.Socket();
-    client.connect(watchDogPort, 'localhost', function() {
-        console.debug('Watchdog connected.');
-    });
+function setupWatchDog() {
+  var client = new net.Socket();
+  client.connect(watchDogPort, 'localhost', function () {
+    console.debug('Watchdog connected.');
+  });
 
-    client.on('error', function(){
-        console.log("Watchdog connection error. Terminating webpack process...");
-        client.destroy();
-        process.exit(0);
-    });
+  client.on('error', function () {
+    console.log("Watchdog connection error. Terminating webpack process...");
+    client.destroy();
+    process.exit(0);
+  });
 
-    client.on('close', function() {
-        client.destroy();
-        console.debug('Watchdog connection closed. Trying to re-run watchdog.');
-        setupWatchDog();
-    });  
+  client.on('close', function () {
+    client.destroy();
+    console.debug('Watchdog connection closed. Trying to re-run watchdog.');
+    setupWatchDog();
+  });
 }
 
-if (watchDogPort){
-    setupWatchDog();
+if (watchDogPort) {
+  setupWatchDog();
 }
 
 
@@ -94,17 +94,17 @@ module.exports = {
   devServer: {
     // webpack-dev-server serves ./ ,  webpack-generated,  and java webapp
     contentBase: [mavenOutputFolderForFlowBundledFiles, 'src/main/webapp'],
-    after: function(app, server) {
-      app.get(`/stats.json`, function(req, res) {
+    after: function (app, server) {
+      app.get(`/stats.json`, function (req, res) {
         res.json(stats.toJson());
       });
-      app.get(`/stats.hash`, function(req, res) {
+      app.get(`/stats.hash`, function (req, res) {
         res.json(stats.toJson().hash.toString());
       });
-      app.get(`/assetsByChunkName`, function(req, res) {
+      app.get(`/assetsByChunkName`, function (req, res) {
         res.json(stats.toJson().assetsByChunkName);
       });
-      app.get(`/stop`, function(req, res) {
+      app.get(`/stop`, function (req, res) {
         // eslint-disable-next-line no-console
         console.log("Stopped 'webpack-dev-server'");
         process.exit(0);
@@ -162,7 +162,7 @@ module.exports = {
       compiler.hooks.afterEmit.tapAsync("FlowIdPlugin", (compilation, done) => {
         if (!devMode) {
           // eslint-disable-next-line no-console
-          console.log("         Emitted " + statsFile)
+          console.log("         Emitted " + statsFile);
           fs.writeFile(statsFile, JSON.stringify(compilation.getStats().toJson(), null, 1), done);
         } else {
           // eslint-disable-next-line no-console
