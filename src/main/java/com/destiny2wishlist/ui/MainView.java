@@ -1,29 +1,16 @@
 package com.destiny2wishlist.ui;
 
-import com.destiny2wishlist.backend.entities.DestinyWeapon;
-import com.destiny2wishlist.backend.services.DestinyManifestService;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.provider.SortDirection;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.ErrorHandler;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.server.VaadinSession;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-
-@Route
+/*@Route
 @PWA(name = "Destiny 2 Wishlist Generator", shortName = "D2 Wishlist")
 @CssImport("./styles/styles.css")
-@Slf4j
-public class MainView extends VerticalLayout {
+@Slf4j*/
+public class MainView /*extends VerticalLayout*/ {
 
-    private final DestinyManifestService manifestService;
+    /*private final DestinyManifestService manifestService;
+
+    private final Grid<DestinyWeapon> grid;
+
+    private static final Set<Grid.Column<DestinyWeapon>> collapsibleColumns = new LinkedHashSet();
 
     public MainView(DestinyManifestService manifestService) {
         VaadinSession.getCurrent()
@@ -37,18 +24,25 @@ public class MainView extends VerticalLayout {
         this.manifestService = manifestService;
 
         setSizeFull();
+        setMargin(false);
+        setSpacing(false);
 
-        loadDestinyManifest();
-        initSearchBar();
+        //TODO Load Destiny Manifest
+        add(buildToolbar());
 
+        grid = buildGrid();
+        addAndExpand(grid);
+
+        //loadDestinyManifest();
+        //initSearchBar();
     }
 
     private void loadDestinyManifest() {
-        /*try {
+        *//*try {
             manifestService.loadDestinyManifest();
         } catch (ApiClientException e) {
             log.error("Error getting Destiny manifest", e);
-        }*/
+        }*//*
     }
 
     private void initSearchBar() {
@@ -77,4 +71,47 @@ public class MainView extends VerticalLayout {
         add(searchComboBox);
         setAlignItems(Alignment.CENTER);
     }
+
+    private Component buildToolbar() {
+        HorizontalLayout header = new HorizontalLayout();
+
+        Label title = new Label("Destiny Weapons");
+        title.setSizeUndefined();
+        //TODO add H1 and NO_MARGIN style to title
+        header.add(title);
+
+        HorizontalLayout tools = new HorizontalLayout(buildFilter());
+        header.add(tools);
+
+        return header;
+    }
+
+    private Component buildFilter() {
+        final TextField filter = new TextField();
+
+        //TODO add value change listener to filter
+
+        filter.setPlaceholder("Filter");
+        filter.setWidth("80%");
+
+        //TODO add shortcut listener to filter
+
+        return filter;
+    }
+
+    private Grid<DestinyWeapon> buildGrid() {
+        final Grid<DestinyWeapon> grid = new Grid<>();
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.setSizeFull();
+
+        Grid.Column<DestinyWeapon> destinyWeaponColumn = grid.addColumn(DestinyWeapon::getName);
+        destinyWeaponColumn.setId("Name");
+        collapsibleColumns.add(destinyWeaponColumn);
+        //TODO display weapon picture on grid
+        //TODO add more columns to grid
+
+        grid.setColumnReorderingAllowed(false);
+
+        return grid;
+    }*/
 }

@@ -1,23 +1,13 @@
 package com.destiny2wishlist.backend.services;
 
-import com.destiny2wishlist.backend.api.dto.DestinyInventoryItemDefinition;
-import com.destiny2wishlist.backend.api.dto.DestinyManifestInfo;
-import com.destiny2wishlist.backend.api.dto.DestinyManifestJson;
-import com.destiny2wishlist.backend.api.dto.DestinyManifestResponse;
-import com.destiny2wishlist.backend.api.dto.enums.DestinyItemTypeEnum;
 import com.destiny2wishlist.backend.api.exception.ApiClientException;
-import com.destiny2wishlist.backend.entities.DestinyManifest;
 import com.destiny2wishlist.backend.entities.DestinyWeapon;
-import com.destiny2wishlist.backend.entities.enums.DestinyItemCategoryEnum;
 import com.destiny2wishlist.backend.repositories.DestinyManifestRepository;
 import com.destiny2wishlist.backend.repositories.DestinyWeaponRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -45,7 +35,7 @@ public class DestinyManifestService {
     public void loadDestinyManifest() throws ApiClientException {
 
         //Only call api once per day
-        if (lastRefresh == null || LocalDate.now().isAfter(lastRefresh)) {
+        /*if (lastRefresh == null || LocalDate.now().isAfter(lastRefresh)) {
             DestinyManifestResponse manifestResponse = destinyApiClient.getManifestInfo();
 
             if (manifestResponse != null) {
@@ -104,7 +94,7 @@ public class DestinyManifestService {
                     });
                 }
             }
-        }
+        }*/
     }
 
     public List<DestinyWeapon> getAllWeapons() {
