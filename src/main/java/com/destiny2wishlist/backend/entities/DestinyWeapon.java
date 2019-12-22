@@ -1,18 +1,15 @@
 package com.destiny2wishlist.backend.entities;
 
-import lombok.*;
+import com.destiny2wishlist.backend.api.dto.definitions.enums.DestinyItemSubTypeEnum;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "destiny_weapon")
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Data
 public class DestinyWeapon extends AbstractEntity {
 
     private String name;
@@ -21,10 +18,22 @@ public class DestinyWeapon extends AbstractEntity {
 
     private String icon;
 
-    private int itemType;
+    @Enumerated(EnumType.ORDINAL)
+    private DestinyItemSubTypeEnum itemSubType;
 
-    private int itemSubType;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DestinyWeaponSocket> intrinsicPerk;
 
-    private long[] itemCategory;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DestinyWeaponSocket> barrel;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DestinyWeaponSocket> magazine;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DestinyWeaponSocket> firstPerk;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<DestinyWeaponSocket> secondPerk;
 
 }

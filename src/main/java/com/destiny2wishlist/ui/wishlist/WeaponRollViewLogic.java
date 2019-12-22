@@ -1,8 +1,9 @@
 package com.destiny2wishlist.ui.wishlist;
 
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
-import com.destiny2wishlist.backend.repositories.DestinyWeaponRollRepository;
+import com.destiny2wishlist.backend.services.DataProvider;
 import com.vaadin.flow.component.UI;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 
@@ -15,14 +16,15 @@ import java.io.Serializable;
  * the system separately, and to e.g. provide alternative views for the same
  * data.
  */
+@Slf4j
 public class WeaponRollViewLogic implements Serializable {
 
     private final WishlistView view;
-    private final DestinyWeaponRollRepository weaponRollRepository;
+    private final DataProvider dataProvider;
 
-    public WeaponRollViewLogic(WishlistView view, DestinyWeaponRollRepository weaponRollRepository) {
+    public WeaponRollViewLogic(WishlistView view, DataProvider dataProvider) {
         this.view = view;
-        this.weaponRollRepository = weaponRollRepository;
+        this.dataProvider = dataProvider;
     }
 
     public void init() {
@@ -41,6 +43,8 @@ public class WeaponRollViewLogic implements Serializable {
         } else {
             fragmentParameter = weaponRollId;
         }
+
+        log.info("fragmentParameter = " + fragmentParameter);
 
         UI.getCurrent().navigate(WishlistView.class, fragmentParameter);
     }
@@ -64,7 +68,7 @@ public class WeaponRollViewLogic implements Serializable {
     }
 
     private DestinyWeaponRoll findWeaponRoll(long weaponRollId) {
-        return weaponRollRepository.findById(weaponRollId).get();
+        return dataProvider.findWeaponRollById(weaponRollId);
     }
 
     public void saveWeaponRoll(DestinyWeaponRoll weaponRoll) {

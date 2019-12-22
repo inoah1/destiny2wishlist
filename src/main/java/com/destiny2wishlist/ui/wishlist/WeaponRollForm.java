@@ -1,26 +1,38 @@
 package com.destiny2wishlist.ui.wishlist;
 
+import com.destiny2wishlist.backend.entities.DestinyWeapon;
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.value.ValueChangeMode;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A form for editing a single product.
  */
+@Slf4j
 public class WeaponRollForm extends Div {
 
     private final VerticalLayout content;
 
     //TODO change this to select/combo box field
-    private final TextField weaponName;
+    private final ComboBox weaponName;
+    private final ComboBox barrel;
+    private final ComboBox magazine;
+    private final ComboBox firstPerkName;
+    private final ComboBox secondPerkName;
+    private final TextField notes;
     //TODO add more fields
     private final Button delete;
     private final WeaponRollViewLogic viewLogic;
@@ -40,11 +52,41 @@ public class WeaponRollForm extends Div {
 
         this.viewLogic = viewLogic;
 
-        weaponName = new TextField("Weapon name");
+        weaponName = new ComboBox("Weapon name");
         weaponName.setWidth("100%");
         weaponName.setRequired(true);
-        weaponName.setValueChangeMode(ValueChangeMode.EAGER);
+        weaponName.setId("weaponName");
+        weaponName.setAllowCustomValue(false);
         content.add(weaponName);
+
+        barrel = new ComboBox("Barrel");
+        barrel.setWidth("100%");
+        barrel.setId("barrel");
+        barrel.setAllowCustomValue(false);
+        content.add(barrel);
+
+        magazine = new ComboBox("Magazine");
+        magazine.setWidth("100%");
+        magazine.setId("magazine");
+        magazine.setAllowCustomValue(false);
+        content.add(magazine);
+
+        firstPerkName = new ComboBox("First perk");
+        firstPerkName.setWidth("100%");
+        firstPerkName.setId("firstPerk");
+        firstPerkName.setAllowCustomValue(false);
+        content.add(firstPerkName);
+
+        secondPerkName = new ComboBox("Second perk");
+        secondPerkName.setWidth("100%");
+        secondPerkName.setId("secondPerk");
+        secondPerkName.setAllowCustomValue(false);
+        content.add(secondPerkName);
+
+        notes = new TextField("Notes");
+        notes.setWidth("100%");
+        notes.setId("notes");
+        content.add(notes);
 
         binder = new BeanValidationBinder<>(DestinyWeaponRoll.class);
         binder.bindInstanceFields(this);
@@ -63,6 +105,7 @@ public class WeaponRollForm extends Div {
         save.addClickListener(event -> {
             if (currentWeaponRoll != null && binder.writeBeanIfValid(currentWeaponRoll)) {
                 viewLogic.saveWeaponRoll(currentWeaponRoll);
+                log.info("Saving weapon roll " + currentWeaponRoll);
             }
         });
         save.addClickShortcut(Key.KEY_S, KeyModifier.CONTROL);
@@ -87,6 +130,13 @@ public class WeaponRollForm extends Div {
         });
 
         content.add(save, discard, delete, cancel);
+    }
+
+    public void setWeapons(Collection<DestinyWeapon> destinyWeaponCollection) {
+        if (destinyWeaponCollection != null) {
+            List<String> destinyWeaponNameList = destinyWeaponCollection.stream().map(DestinyWeapon::getName).collect(Collectors.toList());
+            weaponName.setItems(destinyWeaponNameList);
+        }
     }
 
     public void editWeaponRoll(DestinyWeaponRoll weaponRoll) {

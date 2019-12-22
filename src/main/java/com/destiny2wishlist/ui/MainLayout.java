@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Theme(value = Lumo.class)
-@PWA(name = "Destiny 2 Wishlist generator", shortName = "D2Wishlist")
+@PWA(name = "Destiny 2 Wishlist generator", shortName = "D2Wishlist", iconPath = "icons/icon.png", backgroundColor = "#233348", themeColor = "#233348")
 @CssImport("./styles/styles.css")
 @CssImport(value = "./styles/menu-buttons.css", themeFor = "vaadin-button")
 public class MainLayout extends AppLayout implements RouterLayout {

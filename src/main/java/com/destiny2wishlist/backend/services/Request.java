@@ -35,11 +35,7 @@ public class Request implements IRequest {
         HttpEntity entity = new HttpEntity(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        if (response != null) {
-            log.info("http-response: " + response.getBody());
 
-            return response.getBody();
-        }
-        return null;
+        return response.getBody();
     }
 }

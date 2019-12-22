@@ -10,15 +10,15 @@ public class WeaponRollGrid extends Grid<DestinyWeaponRoll> {
     public WeaponRollGrid() {
         setSizeFull();
 
-        addColumn(DestinyWeaponRoll::getWeaponName).setHeader("Weapon name").setFlexGrow(20).setSortable(true).setKey("weaponname");
+        addColumn(DestinyWeaponRoll::getWeaponName).setHeader("Weapon name").setFlexGrow(20).setSortable(true).setKey("name");
 
-        addColumn(DestinyWeaponRoll::getFirstPerkName).setHeader("First perk").setFlexGrow(10).setKey("firstperk");
+        addColumn(DestinyWeaponRoll::getBarrel).setHeader("Barrel").setFlexGrow(10).setKey("barrel");
 
-        addColumn(DestinyWeaponRoll::getSecondPerkName).setHeader("Second perk").setFlexGrow(10).setKey("second");
+        addColumn(DestinyWeaponRoll::getMagazine).setHeader("Magazine").setFlexGrow(10).setKey("magazine");
 
-        addColumn(DestinyWeaponRoll::getThirdPerkName).setHeader("Third perk").setFlexGrow(10).setKey("thirdperk");
+        addColumn(DestinyWeaponRoll::getFirstPerkName).setHeader("Perk").setFlexGrow(10).setKey("firstperk");
 
-        addColumn(DestinyWeaponRoll::getFourthPerkName).setHeader("Fourth perk").setFlexGrow(10).setKey("fourthperk");
+        addColumn(DestinyWeaponRoll::getSecondPerkName).setHeader("Perk").setFlexGrow(10).setKey("secondperk");
 
         // If the browser window size changes, check if all columns fit on screen
         // (e.g. switching from portrait to landscape mode)
@@ -27,13 +27,17 @@ public class WeaponRollGrid extends Grid<DestinyWeaponRoll> {
 
     private void setColumnVisibility(int width) {
         if (width > 800) {
-            getColumnByKey("weaponname").setVisible(true);
+            getColumnByKey("name").setVisible(true);
+            getColumnByKey("barrel").setVisible(true);
+            getColumnByKey("magazine").setVisible(true);
             getColumnByKey("firstperk").setVisible(true);
             getColumnByKey("secondperk").setVisible(true);
-            getColumnByKey("thirdperk").setVisible(true);
-            getColumnByKey("fourthperk").setVisible(true);
         } else {
-            //TODO decide which columns to hide when browser window is smaller
+            getColumnByKey("name").setVisible(true);
+            getColumnByKey("barrel").setVisible(false);
+            getColumnByKey("magazine").setVisible(false);
+            getColumnByKey("firstperk").setVisible(true);
+            getColumnByKey("secondperk").setVisible(true);
         }
     }
 

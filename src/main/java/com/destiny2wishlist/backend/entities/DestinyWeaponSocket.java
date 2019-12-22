@@ -1,24 +1,16 @@
 package com.destiny2wishlist.backend.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "destiny_weapon_socket")
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class DestinyWeaponSocket extends AbstractEntity {
 
     private String name;
 
-    private String description;
-
-    private String icon;
+    private String type;
 }

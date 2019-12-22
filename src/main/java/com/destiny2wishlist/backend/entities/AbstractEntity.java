@@ -1,28 +1,24 @@
 package com.destiny2wishlist.backend.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @MappedSuperclass
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public abstract class AbstractEntity implements Serializable {
 
     @Id
     private Long hash;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

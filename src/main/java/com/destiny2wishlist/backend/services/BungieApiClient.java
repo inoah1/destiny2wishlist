@@ -1,7 +1,7 @@
 package com.destiny2wishlist.backend.services;
 
 
-import com.destiny2wishlist.backend.api.dto.DestinyManifestJson;
+import com.destiny2wishlist.backend.api.dto.DestinyManifest;
 import com.destiny2wishlist.backend.api.dto.DestinyManifestResponse;
 import com.destiny2wishlist.backend.api.exception.ApiClientException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 
 @Service
-public class DestinyApiClient {
+public class BungieApiClient {
 
     private final IRequest request;
     @Value("${bungie.host}")
     private String apiRoot;
     private ObjectMapper mapper = null;
 
-    public DestinyApiClient(IRequest request) {
+    public BungieApiClient(IRequest request) {
         this.request = request;
         mapper = new ObjectMapper();
     }
@@ -42,15 +42,12 @@ public class DestinyApiClient {
         }
     }
 
-    public DestinyManifestJson getManifestJson(String jsonPath) throws ApiClientException {
+    public DestinyManifest getManifestJson(String jsonPath) throws ApiClientException {
         try {
             String url = formUrl(jsonPath);
             String data = request.getUrl(url);
 
-            DestinyManifestJson response = mapper.readValue(data, DestinyManifestJson.class);
-            response.setJsonData(data);
-
-            return response;
+            return mapper.readValue(data, DestinyManifest.class);
         } catch (Exception e) {
             throw new ApiClientException(e);
         }

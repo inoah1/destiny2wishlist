@@ -1,7 +1,10 @@
 package com.destiny2wishlist.ui.wishlist;
 
+import com.destiny2wishlist.backend.api.exception.ApiClientException;
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
-import com.destiny2wishlist.backend.repositories.DestinyWeaponRollRepository;
+import com.destiny2wishlist.backend.services.DataProvider;
+import com.destiny2wishlist.backend.services.DestinyService;
+import com.destiny2wishlist.backend.services.WishlistService;
 import com.destiny2wishlist.ui.MainLayout;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
@@ -14,32 +17,49 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Route(value = "Wishlist", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
+@Slf4j
 public class WishlistView extends HorizontalLayout implements HasUrlParameter<String> {
 
     public static final String VIEW_NAME = "Wishlist";
     private final WeaponRollGrid grid;
     private final WeaponRollForm form;
     private final WeaponRollViewLogic viewLogic;
-    private final DestinyWeaponRollRepository weaponRollRepository;
+    private final DataProvider dataProvider;
+    private final WeaponRollDataProvider weaponRollDataProvider;
     private TextField filter;
     private Button newWeaponRoll;
+    private final DestinyService destinyService;
+    private final WishlistService wishlistService;
 
-    public WishlistView(DestinyWeaponRollRepository weaponRollRepository) {
-        this.weaponRollRepository = weaponRollRepository;
-        viewLogic = new WeaponRollViewLogic(this, weaponRollRepository);
+    public WishlistView(DataProvider dataProvider, DestinyService destinyService, WishlistService wishlistService) {
+        this.dataProvider = dataProvider;
+        viewLogic = new WeaponRollViewLogic(this, dataProvider);
+        this.destinyService = destinyService;
+        this.wishlistService = wishlistService;
+        weaponRollDataProvider = new WeaponRollDataProvider(this.dataProvider);
+
+        // load data into database
+        try {
+            destinyService.loadDestinyManifest();
+
+        } catch (ApiClientException e) {
+            log.error("Error occurred loading Destiny Manifest");
+        }
 
         setSizeFull();
         final HorizontalLayout topLayout = createTopBar();
 
         grid = new WeaponRollGrid();
-        //TODO figure out how to pass repository as data provider to grid or create new data provider class
+        grid.setDataProvider(weaponRollDataProvider);
         grid.asSingleSelect().addValueChangeListener(event -> viewLogic.rowSelected(event.getValue()));
 
         form = new WeaponRollForm(viewLogic);
-        //TODO when textfields changes to drop-downs on form, find a way to provide all possible weapons to form
+        form.setWeapons(dataProvider.getAllWeapons());
+        //TODO when text fields changes to drop-downs on form, find a way to provide all possible weapons to form
 
         final VerticalLayout barAndGridLayout = new VerticalLayout();
         barAndGridLayout.add(topLayout);
@@ -53,14 +73,14 @@ public class WishlistView extends HorizontalLayout implements HasUrlParameter<St
         add(form);
 
         viewLogic.init();
+
     }
 
     public HorizontalLayout createTopBar() {
         filter = new TextField();
         filter.setPlaceholder("Filter weapon name");
         filter.setValueChangeMode(ValueChangeMode.EAGER);
-        //TODO fix to use data provider if this is not working
-        filter.addValueChangeListener(event -> grid.setItems(weaponRollRepository.findByWeaponNameContainingIgnoreCase(event.getValue())));
+        filter.addValueChangeListener(event -> weaponRollDataProvider.setFilter(event.getValue()));
         filter.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
 
         newWeaponRoll = new Button("Add to Wishlist");
@@ -105,11 +125,11 @@ public class WishlistView extends HorizontalLayout implements HasUrlParameter<St
     }
 
     public void updateWeaponRoll(DestinyWeaponRoll weaponRoll) {
-        weaponRollRepository.save(weaponRoll);
+        weaponRollDataProvider.save(weaponRoll);
     }
 
     public void removeWeaponRoll(DestinyWeaponRoll weaponRoll) {
-        weaponRollRepository.delete(weaponRoll);
+        weaponRollDataProvider.delete(weaponRoll);
     }
 
     public void editWeaponRoll(DestinyWeaponRoll weaponRoll) {
