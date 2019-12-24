@@ -1,11 +1,9 @@
 package com.destiny2wishlist.backend.repositories;
 
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface DestinyWeaponRollRepository extends JpaRepository<DestinyWeaponRoll, Long> {
 
-public interface DestinyWeaponRollRepository extends CrudRepository<DestinyWeaponRoll, Long> {
 
-    List<DestinyWeaponRoll> findByWeaponNameContainingIgnoreCase(String weaponName);
 }

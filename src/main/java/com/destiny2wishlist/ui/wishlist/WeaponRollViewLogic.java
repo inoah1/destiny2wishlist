@@ -1,7 +1,7 @@
 package com.destiny2wishlist.ui.wishlist;
 
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
-import com.destiny2wishlist.backend.services.DataProvider;
+import com.destiny2wishlist.backend.services.DataProviderService;
 import com.vaadin.flow.component.UI;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,11 +20,11 @@ import java.io.Serializable;
 public class WeaponRollViewLogic implements Serializable {
 
     private final WishlistView view;
-    private final DataProvider dataProvider;
+    private final DataProviderService dataProviderService;
 
-    public WeaponRollViewLogic(WishlistView view, DataProvider dataProvider) {
+    public WeaponRollViewLogic(WishlistView view, DataProviderService dataProviderService) {
         this.view = view;
-        this.dataProvider = dataProvider;
+        this.dataProviderService = dataProviderService;
     }
 
     public void init() {
@@ -68,16 +68,17 @@ public class WeaponRollViewLogic implements Serializable {
     }
 
     private DestinyWeaponRoll findWeaponRoll(long weaponRollId) {
-        return dataProvider.findWeaponRollById(weaponRollId);
+        return dataProviderService.findWeaponRollById(weaponRollId);
     }
 
     public void saveWeaponRoll(DestinyWeaponRoll weaponRoll) {
         final boolean newRoll = weaponRoll.isNewRoll();
         view.clearSelection();
+        //TODO prevent from saving duplicate weapon rolls
         view.updateWeaponRoll(weaponRoll);
         setFragmentParameter("");
         //TODO come up with a better notification message
-        view.showSaveNotification(weaponRoll.getWeaponName() + (newRoll ? " new roll created" : " roll updated"));
+        view.showSaveNotification(weaponRoll.getWeapon().getName() + (newRoll ? " new roll created" : " roll updated"));
     }
 
     public void deleteWeaponRoll(DestinyWeaponRoll weaponRoll) {
@@ -85,7 +86,7 @@ public class WeaponRollViewLogic implements Serializable {
         view.removeWeaponRoll(weaponRoll);
         setFragmentParameter("");
         //TODO come up with a better notification message
-        view.showSaveNotification(weaponRoll.getWeaponName() + " roll removed");
+        view.showSaveNotification(weaponRoll.getWeapon().getName() + " roll removed");
     }
 
     public void editWeaponRoll(DestinyWeaponRoll weaponRoll) {

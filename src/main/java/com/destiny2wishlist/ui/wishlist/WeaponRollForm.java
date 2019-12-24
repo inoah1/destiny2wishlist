@@ -2,6 +2,7 @@ package com.destiny2wishlist.ui.wishlist;
 
 import com.destiny2wishlist.backend.entities.DestinyWeapon;
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
+import com.destiny2wishlist.backend.entities.DestinyWeaponSocket;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.button.Button;
@@ -14,9 +15,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A form for editing a single product.
@@ -27,13 +27,12 @@ public class WeaponRollForm extends Div {
     private final VerticalLayout content;
 
     //TODO change this to select/combo box field
-    private final ComboBox weaponName;
-    private final ComboBox barrel;
-    private final ComboBox magazine;
-    private final ComboBox firstPerkName;
-    private final ComboBox secondPerkName;
+    private final ComboBox<DestinyWeapon> weapon;
+    private final ComboBox<DestinyWeaponSocket> barrel;
+    private final ComboBox<DestinyWeaponSocket> magazine;
+    private final ComboBox<DestinyWeaponSocket> firstPerk;
+    private final ComboBox<DestinyWeaponSocket> secondPerk;
     private final TextField notes;
-    //TODO add more fields
     private final Button delete;
     private final WeaponRollViewLogic viewLogic;
     private final Binder<DestinyWeaponRoll> binder;
@@ -52,41 +51,62 @@ public class WeaponRollForm extends Div {
 
         this.viewLogic = viewLogic;
 
-        weaponName = new ComboBox("Weapon name");
-        weaponName.setWidth("100%");
-        weaponName.setRequired(true);
-        weaponName.setId("weaponName");
-        weaponName.setAllowCustomValue(false);
-        content.add(weaponName);
+        weapon = new ComboBox("Weapon name");
+        weapon.setWidth("100%");
+        weapon.setRequired(true);
+        weapon.setId("weapon");
+        weapon.setAllowCustomValue(false);
+        weapon.setItemLabelGenerator(DestinyWeapon::getName);
+        content.add(weapon);
 
         barrel = new ComboBox("Barrel");
         barrel.setWidth("100%");
         barrel.setId("barrel");
         barrel.setAllowCustomValue(false);
+        barrel.setItemLabelGenerator(DestinyWeaponSocket::getName);
         content.add(barrel);
 
         magazine = new ComboBox("Magazine");
         magazine.setWidth("100%");
         magazine.setId("magazine");
         magazine.setAllowCustomValue(false);
+        magazine.setItemLabelGenerator(DestinyWeaponSocket::getName);
         content.add(magazine);
 
-        firstPerkName = new ComboBox("First perk");
-        firstPerkName.setWidth("100%");
-        firstPerkName.setId("firstPerk");
-        firstPerkName.setAllowCustomValue(false);
-        content.add(firstPerkName);
+        firstPerk = new ComboBox("First perk");
+        firstPerk.setWidth("100%");
+        firstPerk.setId("firstPerk");
+        firstPerk.setAllowCustomValue(false);
+        firstPerk.setItemLabelGenerator(DestinyWeaponSocket::getName);
+        content.add(firstPerk);
 
-        secondPerkName = new ComboBox("Second perk");
-        secondPerkName.setWidth("100%");
-        secondPerkName.setId("secondPerk");
-        secondPerkName.setAllowCustomValue(false);
-        content.add(secondPerkName);
+        secondPerk = new ComboBox("Second perk");
+        secondPerk.setWidth("100%");
+        secondPerk.setId("secondPerk");
+        secondPerk.setAllowCustomValue(false);
+        secondPerk.setItemLabelGenerator(DestinyWeaponSocket::getName);
+        content.add(secondPerk);
 
         notes = new TextField("Notes");
         notes.setWidth("100%");
         notes.setId("notes");
         content.add(notes);
+
+        weapon.addValueChangeListener(event -> {
+            DestinyWeapon eventWeapon = event.getValue();
+            if (eventWeapon != null) {
+                barrel.setItems(eventWeapon.getBarrel());
+                magazine.setItems(eventWeapon.getMagazine());
+                firstPerk.setItems(eventWeapon.getFirstPerk());
+                secondPerk.setItems(eventWeapon.getSecondPerk());
+            } else {
+                // clear drop-down if no weapon selected
+                barrel.setItems(new ArrayList<>());
+                magazine.setItems(new ArrayList<>());
+                firstPerk.setItems(new ArrayList<>());
+                secondPerk.setItems(new ArrayList<>());
+            }
+        });
 
         binder = new BeanValidationBinder<>(DestinyWeaponRoll.class);
         binder.bindInstanceFields(this);
@@ -134,8 +154,9 @@ public class WeaponRollForm extends Div {
 
     public void setWeapons(Collection<DestinyWeapon> destinyWeaponCollection) {
         if (destinyWeaponCollection != null) {
-            List<String> destinyWeaponNameList = destinyWeaponCollection.stream().map(DestinyWeapon::getName).collect(Collectors.toList());
-            weaponName.setItems(destinyWeaponNameList);
+            //List<String> destinyWeaponNameList = destinyWeaponCollection.stream().map(DestinyWeapon::getName).collect(Collectors.toList());
+            //weaponName.setItems(destinyWeaponNameList);
+            weapon.setItems(destinyWeaponCollection);
         }
     }
 

@@ -115,4 +115,21 @@ body {
 
 vaadin-grid vaadin-grid-cell-content img {
     max-height: 4em;
+    margin-left: 50%;
+    transform: translate(-50%);
+}
+
+service.upload-with-icon {
+    height: 100%;
+}
+
+service.upload-with-icon div {
+    height: 100%;
+}
+
+service.upload-with-icon .v-button {
+    background-image: url('img/table-logo.png');
+    background-repeat: no-repeat;
+    background-size: 23px 19px;
+    background-position: center;
 }

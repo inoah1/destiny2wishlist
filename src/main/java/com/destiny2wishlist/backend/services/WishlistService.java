@@ -12,9 +12,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,11 +34,10 @@ public class WishlistService {
         this.weaponPerkRepository = weaponPerkRepository;
     }
 
-    @SuppressWarnings("ConstantConditions")
-    public List<String> uploadWishlist(String filePath) {
+    public List<String> uploadWishlist(InputStream inputStream) {
         List<String> errorLines = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             Set<DestinyWeaponRoll> savedRolls = new HashSet<>();
             while ((line = br.readLine()) != null) {
@@ -84,8 +84,7 @@ public class WishlistService {
 
     private DestinyWeaponRoll createDestinyWeaponRoll(DestinyWeapon destinyWeapon, List<Long> perkIdList) {
         DestinyWeaponRoll weaponRoll = new DestinyWeaponRoll();
-        weaponRoll.setWeaponId(destinyWeapon.getHash());
-        weaponRoll.setWeaponName(destinyWeapon.getName());
+        weaponRoll.setWeapon(destinyWeapon);
 
         if (perkIdList != null && !perkIdList.isEmpty()) {
             for (int i = 0; i < perkIdList.size(); i++) {
@@ -95,32 +94,28 @@ public class WishlistService {
                         byId = weaponPerkRepository.findById(perkIdList.get(i));
                         if (byId.isPresent()) {
                             DestinyWeaponSocket weaponPerk = byId.get();
-                            weaponRoll.setBarrelId(weaponPerk.getHash());
-                            weaponRoll.setBarrel(weaponPerk.getName());
+                            weaponRoll.setBarrel(weaponPerk);
                         }
                         break;
                     case 1:
                         byId = weaponPerkRepository.findById(perkIdList.get(i));
                         if (byId.isPresent()) {
                             DestinyWeaponSocket weaponPerk = byId.get();
-                            weaponRoll.setMagazineId(weaponPerk.getHash());
-                            weaponRoll.setMagazine(weaponPerk.getName());
+                            weaponRoll.setMagazine(weaponPerk);
                         }
                         break;
                     case 2:
                         byId = weaponPerkRepository.findById(perkIdList.get(i));
                         if (byId.isPresent()) {
                             DestinyWeaponSocket weaponPerk = byId.get();
-                            weaponRoll.setFirstPerkId(weaponPerk.getHash());
-                            weaponRoll.setFirstPerkName(weaponPerk.getName());
+                            weaponRoll.setFirstPerk(weaponPerk);
                         }
                         break;
                     case 3:
                         byId = weaponPerkRepository.findById(perkIdList.get(i));
                         if (byId.isPresent()) {
                             DestinyWeaponSocket weaponPerk = byId.get();
-                            weaponRoll.setSecondPerkId(weaponPerk.getHash());
-                            weaponRoll.setSecondPerkName(weaponPerk.getName());
+                            weaponRoll.setSecondPerk(weaponPerk);
                         }
                         break;
                 }

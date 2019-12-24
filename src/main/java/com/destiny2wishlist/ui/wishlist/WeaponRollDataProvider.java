@@ -1,7 +1,7 @@
 package com.destiny2wishlist.ui.wishlist;
 
 import com.destiny2wishlist.backend.entities.DestinyWeaponRoll;
-import com.destiny2wishlist.backend.services.DataProvider;
+import com.destiny2wishlist.backend.services.DataProviderService;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
 import java.util.Locale;
@@ -14,13 +14,13 @@ import java.util.Objects;
  */
 public class WeaponRollDataProvider extends ListDataProvider<DestinyWeaponRoll> {
 
-    private final DataProvider dataProvider;
+    private final DataProviderService dataProviderService;
     // Text filter that can be changed separately.
     private String filterText = "";
 
-    public WeaponRollDataProvider(DataProvider dataProvider) {
-        super(dataProvider.getAllWeaponRolls());
-        this.dataProvider = dataProvider;
+    public WeaponRollDataProvider(DataProviderService dataProviderService) {
+        super(dataProviderService.getAllWeaponRolls());
+        this.dataProviderService = dataProviderService;
     }
 
     /**
@@ -31,7 +31,7 @@ public class WeaponRollDataProvider extends ListDataProvider<DestinyWeaponRoll> 
     public void save(DestinyWeaponRoll weaponRoll) {
         final boolean newWeaponRoll = weaponRoll.isNewRoll();
 
-        dataProvider.updateWeaponRoll(weaponRoll);
+        dataProviderService.updateWeaponRoll(weaponRoll);
         if (newWeaponRoll) {
             refreshAll();
         } else {
@@ -46,7 +46,7 @@ public class WeaponRollDataProvider extends ListDataProvider<DestinyWeaponRoll> 
      * @param weaponRoll the weapon roll to be deleted
      */
     public void delete(DestinyWeaponRoll weaponRoll) {
-        dataProvider.deleteWeaponRoll(weaponRoll.getId());
+        dataProviderService.deleteWeaponRoll(weaponRoll.getId());
         refreshAll();
     }
 
@@ -64,7 +64,7 @@ public class WeaponRollDataProvider extends ListDataProvider<DestinyWeaponRoll> 
         }
         this.filterText = filterText.trim();
 
-        setFilter(weaponRoll -> passesFilter(weaponRoll.getWeaponName(), filterText));
+        setFilter(weaponRoll -> passesFilter(weaponRoll.getWeapon().getName(), filterText));
     }
 
     @Override

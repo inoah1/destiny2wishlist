@@ -7,34 +7,27 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"weaponId", "barrelId", "magazineId", "firstPerkId", "secondPerkId"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"weapon_hash", "barrel_hash", "magazine_hash", "first_perk_hash", "second_perk_hash"})})
 public class DestinyWeaponRoll implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    private String weaponName;
+    @ManyToOne(optional = false)
+    private DestinyWeapon weapon;
 
-    @Column(nullable = false)
-    private Long weaponId;
+    @ManyToOne
+    private DestinyWeaponSocket barrel;
 
-    private String barrel;
+    @ManyToOne
+    private DestinyWeaponSocket magazine;
 
-    private Long barrelId;
+    @ManyToOne
+    private DestinyWeaponSocket firstPerk;
 
-    private String magazine;
-
-    private Long magazineId;
-
-    private String firstPerkName;
-
-    private Long firstPerkId;
-
-    private String secondPerkName;
-
-    private Long secondPerkId;
+    @ManyToOne
+    private DestinyWeaponSocket secondPerk;
 
     private String notes;
 
@@ -44,35 +37,35 @@ public class DestinyWeaponRoll implements Serializable {
 
     public String generateDimWishlistString() {
         final StringBuilder sb = new StringBuilder("dimwishlist:item=");
-        sb.append(weaponId);
-        if (barrelId != null || magazineId != null || firstPerkId != null || secondPerkId != null) {
+        sb.append(weapon.getHash());
+        if (barrel != null || magazine != null || firstPerk != null || secondPerk != null) {
             sb.append("&perks=");
         }
 
         int perkAdded = 0;
-        if (barrelId != null) {
-            sb.append(barrelId);
+        if (barrel != null) {
+            sb.append(barrel.getHash());
             perkAdded++;
         }
-        if (magazineId != null) {
+        if (magazine != null) {
             if (perkAdded > 0) {
                 sb.append(",");
             }
-            sb.append(magazineId);
+            sb.append(magazine.getHash());
             perkAdded++;
         }
-        if (firstPerkId != null) {
+        if (firstPerk != null) {
             if (perkAdded > 0) {
                 sb.append(",");
             }
-            sb.append(firstPerkId);
+            sb.append(firstPerk.getHash());
             perkAdded++;
         }
-        if (secondPerkId != null) {
+        if (secondPerk != null) {
             if (perkAdded > 0) {
                 sb.append(",");
             }
-            sb.append(secondPerkId);
+            sb.append(secondPerk.getHash());
             perkAdded++;
         }
         if (notes != null) {
@@ -80,5 +73,25 @@ public class DestinyWeaponRoll implements Serializable {
             sb.append(notes);
         }
         return sb.toString();
+    }
+
+    public String getWeaponName() {
+        return (weapon == null) ? "" : weapon.getName();
+    }
+
+    public String getMagazineName() {
+        return (magazine == null) ? "" : magazine.getName();
+    }
+
+    public String getBarrelName() {
+        return (barrel == null) ? "" : barrel.getName();
+    }
+
+    public String getFirstPerkName() {
+        return (firstPerk == null) ? "" : firstPerk.getName();
+    }
+
+    public String getSecondPerkName() {
+        return (secondPerk == null) ? "" : secondPerk.getName();
     }
 }
